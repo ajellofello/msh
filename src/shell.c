@@ -1,13 +1,9 @@
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
-/* ---- COLORS ---- */
 #define ANSI_RESET "\e[0m"
 #define ANSI_BLUE  "\e[0;34m"
-/* ---------------- */
-
-#define PROMPTSIZ  1024
 
 void* xmalloc(const size_t size)
 {
@@ -22,31 +18,27 @@ void* xmalloc(const size_t size)
   return mem;
 }
 
-char* getprompt()
-{
-  char* prompt = xmalloc(PROMPTSIZ);
-
-  printf(ANSI_BLUE"msh$ "ANSI_RESET);
-  fgets(prompt, PROMPTSIZ, stdin);
-
-  return prompt;
-}
-
 void rm_trailingnl(char* str)
 {
+  if (str == NULL) { return; }
+
   size_t end = (strlen(str) - 1);
   str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
 void lstrip(char** str)
 {
+  if (str == NULL) { return; }
+
   while (**str == ' ')
     ++(*str);
 }
 
 void rstrip(char* str)
 {
-  for (int i = (strlen(str) - 1);; i > 0; i--)
+  if (str == NULL) { return; }
+
+  for (int i = (strlen(str) - 1); i > 0; i--)
   {
     if (str[i] != ' ')
     {
@@ -62,23 +54,14 @@ void strip(char** str)
   rstrip(*str);
 }
 
-int main()
+char* getprompt(const size_t size)
 {
-  char* prompt;
+  char* prompt = xmalloc(size);
 
-  while ((prompt = getprompt()))
-  {
-    rm_trailingnl(prompt);
-    strip(&prompt);
+  printf(ANSI_BLUE"msh$ "ANSI_RESET);
+  fgets(prompt, size, stdin);
 
-    int shouldexit = (strcmp(prompt, "exit") == 0);
-    if (shouldexit)
-    {
-      puts("exit");
-      break;
-    }
-  }
-
-  return 0;
+  rm_trailingnl(prompt);
+  strip(&prompt);
+  return prompt;
 }
-
