@@ -9,7 +9,7 @@
 
 #define PROMPTSIZ  1024
 
-void* xmalloc(size_t size)
+void* xmalloc(const size_t size)
 {
   void* mem = malloc(size);
 
@@ -38,6 +38,30 @@ void rm_trailingnl(char* str)
   str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
+void lstrip(char** str)
+{
+  while (**str == ' ')
+    ++(*str);
+}
+
+void rstrip(char* str)
+{
+  for (int i = (strlen(str) - 1);; i > 0; i--)
+  {
+    if (str[i] != ' ')
+    {
+      str[i + 1] = '\0';
+      break;
+    }
+  }
+}
+
+void strip(char** str)
+{
+  lstrip(str);
+  rstrip(*str);
+}
+
 int main()
 {
   char* prompt;
@@ -45,6 +69,7 @@ int main()
   while ((prompt = getprompt()))
   {
     rm_trailingnl(prompt);
+    strip(&prompt);
 
     int shouldexit = (strcmp(prompt, "exit") == 0);
     if (shouldexit)
