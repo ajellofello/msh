@@ -2,66 +2,68 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "shell.h"
+
 #define ANSI_RESET "\e[0m"
-#define ANSI_BLUE  "\e[0;34m"
+#define ANSI_BLUE	"\e[0;34m"
 
 void* xmalloc(const size_t size)
 {
-  void* mem = malloc(size);
+	void* mem = malloc(size);
 
-  if (!mem)
-  {
-    perror("malloc");
-    exit(1);
-  }
+	if (!mem)
+	{
+		perror("malloc");
+		exit(1);
+	}
 
-  return mem;
+	return mem;
 }
 
 void rm_trailingnl(char* str)
 {
-  if (str == NULL) { return; }
+	if (str == NULL) { return; }
 
-  size_t end = (strlen(str) - 1);
-  str[end] = (str[end] == '\n') ? '\0' : str[end];
+	size_t end = (strlen(str) - 1);
+	str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
 void lstrip(char** str)
 {
-  if (str == NULL) { return; }
+	if (str == NULL) { return; }
 
-  while (**str == ' ')
-    ++(*str);
+	while (**str == ' ')
+		++(*str);
 }
 
 void rstrip(char* str)
 {
-  if (str == NULL) { return; }
+	if (str == NULL) { return; }
 
-  for (int i = (strlen(str) - 1); i > 0; i--)
-  {
-    if (str[i] != ' ')
-    {
-      str[i + 1] = '\0';
-      break;
-    }
-  }
+	for (int i = (strlen(str) - 1); i > 0; i--)
+	{
+		if (str[i] != ' ')
+		{
+			str[i + 1] = '\0';
+			break;
+		}
+	}
 }
 
 void strip(char** str)
 {
-  lstrip(str);
-  rstrip(*str);
+	lstrip(str);
+	rstrip(*str);
 }
 
 char* getprompt(const size_t size)
 {
-  char* prompt = xmalloc(size);
+	char* prompt = xmalloc(size);
 
-  printf(ANSI_BLUE"msh$ "ANSI_RESET);
-  fgets(prompt, size, stdin);
+	printf(ANSI_BLUE"msh$ "ANSI_RESET);
+	fgets(prompt, size, stdin);
 
-  rm_trailingnl(prompt);
-  strip(&prompt);
-  return prompt;
+	rm_trailingnl(prompt);
+	strip(&prompt);
+	return prompt;
 }
