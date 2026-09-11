@@ -1,4 +1,4 @@
-OBJECTS := $(addprefix build/, main.o shell.o builtin.o)
+OBJECTS := $(addprefix build/, main.o shell.o builtin.o alloc.o)
 CFLAGS  := -Iinclude -std=c99
 VPATH   := src include
 bin     := bin/msh.out
@@ -13,6 +13,9 @@ build/shell.o: shell.c shell.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/builtin.o: builtin.c builtin.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+build/alloc.o: alloc.c alloc.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean debug

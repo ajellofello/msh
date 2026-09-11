@@ -3,46 +3,11 @@
 #include <stdio.h>
 
 #include "shell.h"
+#include "alloc.h"
 
 #define ANSI_RESET "\e[0m"
 #define ANSI_BLUE  "\e[0;34m"
 #define BASE_ARGV 8
-
-void* xmalloc(const size_t size)
-{
-  void* mem = malloc(size);
-
-  if (!mem)
-  {
-    perror("malloc");
-    exit(1);
-  }
-  return mem;
-}
-
-void* xcalloc(size_t n, size_t size)
-{
-  void* mem = calloc(n, size);
-
-  if (!mem)
-  {
-    perror("calloc");
-    exit(1);
-  }
-  return mem;
-}
-
-void* xrealloc(void* p, size_t size)
-{
-  void* mem = realloc(p, size);
-
-  if (!mem)
-  {
-    perror("realloc");
-    exit(1);
-  }
-  return mem;
-}
 
 void rm_trailingnl(char* str)
 {
