@@ -8,18 +8,27 @@
 
 int main()
 {
-	char* prompt;
+  char* prompt;
 
-	while ((prompt = getprompt(PROMPTSIZ)))
-	{
-		int shouldexit = (strcmp(prompt, "exit") == 0);
-		if (shouldexit)
-		{
-			puts("exit");
-			break;
-		}
-	}
+  while ((prompt = getprompt(PROMPTSIZ)))
+  {
+    int shouldexit = (strcmp(prompt, "exit") == 0);
+    if (shouldexit)
+    {
+      puts("exit");
+      break;
+    }
+    
+    int argc = 0;
+    char** argv = parse(prompt, &argc);
 
-	return 0;
+    printf("argc: %d\n", argc);
+    printf("argv: ( ");
+    for (int i = 0; i < argc; i++)
+      printf("\"%s\" ", argv[i]);
+    printf(")\n");
+  }
+
+  return 0;
 }
 

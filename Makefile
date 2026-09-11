@@ -1,5 +1,5 @@
 OBJECTS := $(addprefix build/, main.o shell.o builtin.o)
-CFLAGS  := -Iinclude
+CFLAGS  := -Iinclude -std=c99
 VPATH   := src include
 bin     := bin/msh.out
 

@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 char* getprompt(const size_t size);
+char** parse(char* prompt, int* argc);
 
 #endif
 
