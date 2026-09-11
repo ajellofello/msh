@@ -100,8 +100,8 @@ char** parse(char* prompt, int* argc)
 
   do
   {
-    if (sizeof(argv) <= *argc)
-      xrealloc(argv, (size += 8));
+    if (size <= *argc)
+      xrealloc(argv, ((size += 8) * sizeof(char*)));
 
     argv[*argc] = tok;
 
