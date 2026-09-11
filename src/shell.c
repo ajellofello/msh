@@ -94,14 +94,14 @@ char* getprompt(const size_t size)
 
 char** parse(char* prompt, int* argc)
 {
-  size_t size = BASE_ARGV;
-  char** argv = xcalloc(size, sizeof(char*));
+  size_t cap = BASE_ARGV;
+  char** argv = xcalloc(cap, sizeof(char*));
   char* tok = strtok(prompt, " ");
 
   do
   {
-    if (size <= *argc)
-      xrealloc(argv, ((size += 8) * sizeof(char*)));
+    if (cap <= *argc)
+      xrealloc(argv, ((cap += 8) * sizeof(char*)));
 
     argv[*argc] = tok;
 
