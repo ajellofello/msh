@@ -6,7 +6,7 @@
 #include "alloc.h"
 
 #define ANSI_RESET "\e[0m"
-#define ANSI_BLUE  "\e[0;34m"
+#define ANSI_CYAN  "\e[0;36m"
 #define BASE_ARGV 8
 
 void rm_trailingnl(char* str)
@@ -49,7 +49,7 @@ char* getprompt(const size_t size)
 {
   char* prompt = xmalloc(size);
 
-  printf(ANSI_BLUE"msh$ "ANSI_RESET);
+  printf(ANSI_CYAN"$ "ANSI_RESET);
   fgets(prompt, size, stdin);
 
   rm_trailingnl(prompt);
@@ -76,4 +76,6 @@ char** parse(char* prompt, int* argc)
   argv[*argc] = NULL;
   return argv;
 }
+
+
 
