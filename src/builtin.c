@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include "builtin.h"
 #include "alloc.h"
@@ -45,14 +46,15 @@ void cd_cmd(int argc, char** argv)
 
   if (!dest)
   {
-    fprintf(stderr, CD_CMD": HOME is unset\n");
+    if (errno != 0) { perror(CD_CMD); }
+    else { fprintf(stderr, CD_CMD": HOME is unset\n"); }
     return;
   }
 
   int success = (chdir(dest) != -1);
   if (!success)
   {
-    perror("cd");
+    perror(CD_CMD);
     return;
   }
 
