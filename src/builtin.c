@@ -13,6 +13,7 @@
 #include "alloc.h"
 
 #define EXIT_CMD "exit"
+#define PWD_CMD  "pwd"
 #define CD_CMD   "cd"
 
 void exit_cmd(int argc, char** argv)
@@ -59,5 +60,19 @@ void cd_cmd(int argc, char** argv)
   }
 
   if (shouldfree) { free(dest); }
+}
+
+void pwd_cmd(int argc, char** argv)
+{
+  char cwd[PATH_MAX];
+  int success = (getcwd(cwd, PATH_MAX) != NULL);
+
+  if (!success)
+  {
+    perror(PWD_CMD);
+    return;
+  }
+
+  printf("%s\n", cwd);
 }
 

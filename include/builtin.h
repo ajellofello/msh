@@ -3,5 +3,6 @@
 
 void exit_cmd(int argc, char** argv);
 void cd_cmd(int argc, char** argv);
+void pwd_cmd(int argc, char** argv);
 
 #endif
