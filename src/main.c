@@ -8,17 +8,12 @@
 
 int main()
 {
-  char* prompt;
+  int shouldexit = 0;
 
-  while ((prompt = getprompt(PROMPTSIZ)))
+  while (!shouldexit)
   {
-    int shouldexit = (strcmp(prompt, "exit") == 0);
-    if (shouldexit)
-    {
-      puts("exit");
-      break;
-    }
-    
+    char* prompt = getprompt(PROMPTSIZ);
+
     int argc = 0;
     char** argv = parse(prompt, &argc);
 
@@ -27,7 +22,10 @@ int main()
     for (int i = 0; i < argc; i++)
       printf("\"%s\" ", argv[i]);
     printf(")\n");
+
+    shouldexit = (strcmp(prompt, "exit") == 0);
   }
+  printf("exit\n");
 
   return 0;
 }
