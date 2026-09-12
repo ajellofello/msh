@@ -24,6 +24,7 @@ int main()
     else if (strcmp(cmd, "cd") == 0) { cd_cmd(argc, argv); }
     else if (strcmp(cmd, "pwd") == 0) { pwd_cmd(argc, argv); }
     else if (strcmp(cmd, "echo") == 0) { echo_cmd(argc, argv); }
+    else if (strcmp(cmd, "help") == 0) { HELP(); }
     else
     {
       fprintf(stderr, "unknown command '%s'\n", cmd);
