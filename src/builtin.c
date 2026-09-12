@@ -1,60 +1,61 @@
-#define _POSIX_SOURCE
-#include <sys/types.h>
-#include <signal.h>
+#ifndef _DEFAULT_SOURCE
+#  define _DEFAULT_SOURCE
+#endif
+
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits.h>
 #include <stdio.h>
 #include <ctype.h>
 
 #include "builtin.h"
+#include "alloc.h"
 
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"
 
-int exit_cmd(int argc, char** argv, int* exitnum)
+void exit_cmd(int argc, char** argv)
 {
-  const pid_t ppid = getppid();
-  char* exitstat_str = (argv[1]) ? argv[1] : NULL;
+  char* exitstat = (argv[1]) ? argv[1] : NULL;
 
-  if (!exitstat_str)
+  if (!exitstat)
   {
-    *exitnum = 0;
-    kill(ppid, SIGTERM);
-    return EXIT_SUCCESS;
+    printf("exit\n");
+    exit(EXIT_SUCCESS);
   }
 
   char c;
-  for (int i = 0; (c = exitstat_str[i]); i++)
+  for (int i = 0; (c = exitstat[i]); i++)
   {
     if (!isdigit(c) && c != '-')
     {
       fprintf(stderr, EXIT_CMD": expected a numeric exit status\n");
-      return EXIT_FAILURE;
+      return;
     }
   }
 
-  *exitnum =  atoi(exitstat_str);
-  kill(ppid, SIGTERM);
-  return EXIT_SUCCESS;
+  printf("exit\n");
+  exit(atoi(exitstat));
 }
 
-int cd_cmd(int argc, char** argv)
+void cd_cmd(int argc, char** argv)
 {
-  const char* dest = (argv[1]) ? argv[1] : getenv("HOME");
+  int shouldfree = (argv[1] != NULL); /* if a path was given we need to free the resulted realpath() */
+  char* dest = (argv[1]) ? realpath(argv[1], NULL) : getenv("HOME");
 
   if (!dest)
   {
-    fprintf(stderr, CD_CMD": current user does not have a home directory\n");
-    return EXIT_FAILURE;
+    fprintf(stderr, CD_CMD": HOME is unset\n");
+    return;
   }
 
   int success = (chdir(dest) != -1);
   if (!success)
   {
     perror("cd");
-    return EXIT_FAILURE;
+    return;
   }
 
-  return EXIT_SUCCESS;
+  if (shouldfree) { free(dest); }
 }
 

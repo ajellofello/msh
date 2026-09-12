@@ -1,7 +1,7 @@
 #ifndef BUILTIN_H
 #define BUILTIN_H
 
-int cd_cmd(int argc, char** argv);
-int exit_cmd(int argc, char** argv, int* exitnum);
+void exit_cmd(int argc, char** argv);
+void cd_cmd(int argc, char** argv);
 
 #endif
