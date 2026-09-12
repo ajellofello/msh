@@ -6,7 +6,6 @@
 #include <ctype.h>
 
 #include "builtin.h"
-#include "shell.h"
 
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"

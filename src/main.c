@@ -13,6 +13,8 @@
 #define PID_CHILD 0
 #define PID_ERR   -1
 
+typedef enum { UNKNOWN, EXIT, CD } cmd_t;
+
 static char** argv;
 static char* prompt;
 static int exitnum = EXIT_SUCCSS;
@@ -22,7 +24,7 @@ void terminate(int signum)
   free(prompt);
   free(argv);
 
-  printf(ANSI_ITALIC"exit\n"ANSI_RESET);
+  printf("exit\n");
 
   exit(exitnum);
 }
@@ -40,9 +42,18 @@ int main()
 
     int argc = 0;
     argv = parse(prompt, &argc);
-    char* cmd = argv[0];
-    pid_t pid = fork();
+    char* cmd_arg = argv[0];
+    cmd_t cmd = UNKNOWN;
+  
+    if (strcmp(cmd_arg, "exit") == 0) { cmd = EXIT; }
+    else if (strcmp(cmd_arg, "cd") == 0) { cmd = CD; }
+    else
+    {
+      fprintf(stderr, "unknown command '%s'\n", cmd_arg);
+      continue;
+    }
 
+    pid_t pid = fork();
     if (pid == PID_ERR)
     {
       fprintf(stderr, "could not fork current process. Terminating Shell\n");
@@ -50,19 +61,20 @@ int main()
     }
 
     if (pid != PID_CHILD)
-    {
-      pid_t terminated = wait(NULL);
-    }
+      wait(NULL);
     else
-    {
-      if (strcmp(cmd, "exit") == 0) { exit_cmd(argc, argv, &exitnum); }
-      else if (strcmp(cmd, "cd") == 0) { cd_cmd(argc, argv); }
-      else
+      switch (cmd)
       {
-        fprintf(stderr, "unknown command '%s'\n", cmd);
-        exit(EXIT_FAILURE);
+        case EXIT:
+          exit_cmd(argc, argv, &exitnum); 
+          break;
+        case CD:
+          cd_cmd(argc, argv); 
+          break;
+        defautl:
+          exit(EXIT_FAILURE);
+          break;
       }
-    }
   }
 
   exit(EXIT_SUCCESS);
