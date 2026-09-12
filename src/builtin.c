@@ -4,17 +4,20 @@
 
 #include "builtin.h"
 
-int cd(const char* dest)
+#define CD_CMD "cd"
+
+int cd_cmd(int argc, char** argv)
 {
-  if (dest == NULL) { dest = getenv("HOME"); }
+  char* dest = (argv[1]) ? dest : getenv("HOME");
 
   if (!dest)
   {
-    fprintf(stderr, "cd: current user does not have a home directory\n");
+    fprintf(stderr, CD_CMD": current user does not have a home directory\n");
     return 1;
   }
 
-  if (chdir(dest) == -1)
+  int success = (chdir(dest) != -1);
+  if (!sucess)
   {
     perror("cd");
     return 1;
