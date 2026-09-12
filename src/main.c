@@ -15,18 +15,22 @@
 
 typedef enum { UNKNOWN, EXIT, CD } cmd_t;
 
-char** argv;
-char* prompt;
+static char** argv;
+static char* prompt;
 static int exitnum = EXIT_SUCCSS;
+
+void pexit_and_free(int exitnum)
+{
+  if (prompt) { free(prompt); }
+  if (argv) { free(argv); }
+
+  exit(exitnum);
+}
 
 void terminate(int signum)
 {
-  free(prompt);
-  free(argv);
-
   printf("exit\n");
-
-  exit(exitnum);
+  pexit_and_free(exitnum);
 }
 
 int main()
@@ -57,26 +61,30 @@ int main()
     if (pid == PID_ERR)
     {
       fprintf(stderr, "could not fork current process. Terminating Shell\n");
-      exit(EXIT_FAILURE);
+      pexit_and_free(EXIT_FAILURE);
     }
 
     if (pid != PID_CHILD)
       wait(NULL);
     else
+    {
+      int exitnum = EXIT_FAILURE;
       switch (cmd)
       {
         case EXIT:
-          exit_cmd(argc, argv, &exitnum); 
+          exitnum = exit_cmd(argc, argv, &exitnum); 
           break;
         case CD:
-          cd_cmd(argc, argv); 
+          exitnum = cd_cmd(argc, argv); 
           break;
         defautl:
-          exit(EXIT_FAILURE);
           break;
       }
+
+      pexit_and_free(exitnum);
+    }
   }
 
-  exit(EXIT_SUCCESS);
+  pexit_and_free(EXIT_SUCCESS);
 }
 
