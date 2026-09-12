@@ -2,6 +2,6 @@
 #define BUILTIN_H
 
 int cd_cmd(int argc, char** argv);
-int exit_cmd(int argc, char** argv, int* exitnum, pid_t ppid);
+int exit_cmd(int argc, char** argv, int* exitnum);
 
 #endif

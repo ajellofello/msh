@@ -52,6 +52,9 @@ char* getprompt(const size_t size)
 
   rm_trailingnl(prompt);
   strip(&prompt);
+
+  if (strcmp(prompt, "") == 0) { return NULL; }
+
   return prompt;
 }
 

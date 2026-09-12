@@ -5,18 +5,20 @@
 #include <ctype.h>
 
 #include "builtin.h"
+#include "shell.h"
 
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"
 
-int exit_cmd(int argc, char** argv, int* exitnum, pid_t ppid)
+int exit_cmd(int argc, char** argv, int* exitnum)
 {
   char* exitstat_str = (argv[1]) ? argv[1] : NULL;
 
   if (!exitstat_str)
   {
+    printf(ANSI_ITALIC"exit\n"ANSI_RESET);
     *exitnum = 0;
-    kill(ppid, SIGTERM);
+    kill(0, SIGTERM);
   }
 
   char c;
@@ -30,7 +32,8 @@ int exit_cmd(int argc, char** argv, int* exitnum, pid_t ppid)
   }
 
   *exitnum =  atoi(exitstat_str);
-  kill(ppid, SIGTERM);
+  printf(ANSI_ITALIC"exit\n"ANSI_RESET);
+  kill(0, SIGTERM);
 }
 
 int cd_cmd(int argc, char** argv)
@@ -44,7 +47,7 @@ int cd_cmd(int argc, char** argv)
   }
 
   int success = (chdir(dest) != -1);
-  if (!sucess)
+  if (!success)
   {
     perror("cd");
     return 1;
