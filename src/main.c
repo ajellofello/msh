@@ -26,10 +26,7 @@ int main()
     else if (strcmp(cmd, "echo") == 0) { echo_cmd(argc, argv); }
     else if (strcmp(cmd, "help") == 0) { HELP(); }
     else
-    {
-      fprintf(stderr, "unknown command '%s'\n", cmd);
-      continue;
-    }
+      exec(cmd, argv);
 
     free(argv);
     free(prompt);

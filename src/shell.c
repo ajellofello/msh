@@ -1,11 +1,15 @@
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <stdio.h>
 
 #include "shell.h"
 #include "alloc.h"
 
 #define BASE_ARGV 8
+#define PID_CHILD 0
+#define PID_ERROR -1
 
 void rm_trailingnl(char* str)
 {
@@ -77,4 +81,30 @@ char** parse(char* prompt, int* argc)
   argv[*argc] = NULL;
   return argv;
 }
+
+void exec(char* path, char** argv)
+{
+  const pid_t pid = fork();
+
+  if (pid == PID_ERROR)
+  {
+    fprintf(stderr, PROG": could not fork current process. Shell exiting\n");
+    perror(PROG": fork");
+    exit(EXIT_FAILURE);
+  }
+
+  if (pid != PID_CHILD)
+    wait(NULL);
+  else
+  {
+    int success = (execvp(path, argv) != -1);
+
+    if (!success)
+    {
+      perror(PROG);
+      exit(EXIT_FAILURE);
+    }
+  }
+}
+
 
