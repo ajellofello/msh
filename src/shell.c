@@ -5,8 +5,6 @@
 #include "shell.h"
 #include "alloc.h"
 
-#define ANSI_RESET "\e[0m"
-#define ANSI_CYAN  "\e[0;36m"
 #define BASE_ARGV 8
 
 void rm_trailingnl(char* str)

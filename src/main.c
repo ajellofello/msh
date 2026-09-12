@@ -6,16 +6,29 @@
 
 #define PROMPTSIZ 1024
 
+static char** argv;
+static char* prompt;
+static int exit_code = 0;
+
+void terminate(int signum)
+{
+  free(prompt);
+  free(argv);
+
+  printf(ANSI_ITALIC"exit\n"ANSI_RESET);
+  exit(exit_code);
+}
+
 int main()
 {
   int shouldexit = 0;
 
   while (!shouldexit)
   {
-    char* prompt = getprompt(PROMPTSIZ);
+    prompt = getprompt(PROMPTSIZ);
 
     int argc = 0;
-    char** argv = parse(prompt, &argc);
+    argv = parse(prompt, &argc);
 
     printf("argc: %d\n", argc);
     printf("argv: ( ");
@@ -25,7 +38,9 @@ int main()
 
     shouldexit = (strcmp(prompt, "exit") == 0);
   }
-  printf("exit\n");
+
+  free(prompt);
+  free(argv);
 
   return 0;
 }
