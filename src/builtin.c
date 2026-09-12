@@ -13,7 +13,7 @@
 extern char** argv;
 extern char* prompt;
 
-void free_and_terminate(int exitnum)
+void killcp(int exitnum)
 {
   free(prompt);
   free(argv);
@@ -30,7 +30,7 @@ void exit_cmd(int argc, char** argv, int* exitnum)
   {
     *exitnum = 0;
     kill(ppid, SIGTERM);
-    free_and_terminate(EXIT_SUCCESS);
+    killcp(EXIT_SUCCESS);
   }
 
   char c;
@@ -39,13 +39,13 @@ void exit_cmd(int argc, char** argv, int* exitnum)
     if (!isdigit(c) && c != '-')
     {
       fprintf(stderr, EXIT_CMD": expected a numeric exit status\n");
-      free_and_terminate(EXIT_FAILURE);
+      killcp(EXIT_SUCCESS);
     }
   }
 
   *exitnum =  atoi(exitstat_str);
   kill(ppid, SIGTERM);
-  free_and_terminate(EXIT_SUCCESS);
+  killcp(EXIT_SUCCESS);
 }
 
 void cd_cmd(int argc, char** argv)
@@ -55,16 +55,16 @@ void cd_cmd(int argc, char** argv)
   if (!dest)
   {
     fprintf(stderr, CD_CMD": current user does not have a home directory\n");
-    exit(EXIT_FAILURE);
+    killcp(EXIT_FAILURE);
   }
 
   int success = (chdir(dest) != -1);
   if (!success)
   {
     perror("cd");
-    exit(EXIT_FAILURE);
+    killcp(EXIT_FAILURE);
   }
 
-  exit(EXIT_SUCCESS);
+  killcp(EXIT_SUCCESS);
 }
 
