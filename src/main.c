@@ -15,8 +15,8 @@
 
 typedef enum { UNKNOWN, EXIT, CD } cmd_t;
 
-static char** argv;
-static char* prompt;
+char** argv;
+char* prompt;
 static int exitnum = EXIT_SUCCSS;
 
 void terminate(int signum)

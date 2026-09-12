@@ -10,6 +10,17 @@
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"
 
+extern char** argv;
+extern char* prompt;
+
+void free_and_terminate(int exitnum)
+{
+  free(prompt);
+  free(argv);
+
+  exit(exitnum);
+}
+
 void exit_cmd(int argc, char** argv, int* exitnum)
 {
   const pid_t ppid = getppid();
@@ -19,7 +30,7 @@ void exit_cmd(int argc, char** argv, int* exitnum)
   {
     *exitnum = 0;
     kill(ppid, SIGTERM);
-    exit(EXIT_SUCCESS);
+    free_and_terminate(EXIT_SUCCESS);
   }
 
   char c;
@@ -28,13 +39,13 @@ void exit_cmd(int argc, char** argv, int* exitnum)
     if (!isdigit(c) && c != '-')
     {
       fprintf(stderr, EXIT_CMD": expected a numeric exit status\n");
-      exit(EXIT_FAILURE);
+      free_and_terminate(EXIT_FAILURE);
     }
   }
 
   *exitnum =  atoi(exitstat_str);
   kill(ppid, SIGTERM);
-  exit(EXIT_SUCCESS);
+  free_and_terminate(EXIT_SUCCESS);
 }
 
 void cd_cmd(int argc, char** argv)
