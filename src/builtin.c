@@ -1,3 +1,4 @@
+#define _POSIX_SOURCE
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,7 +6,6 @@
 #include <ctype.h>
 
 #include "builtin.h"
-#include "shell.h"
 
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"
@@ -16,7 +16,7 @@ int exit_cmd(int argc, char** argv, int* exitnum)
 
   if (!exitstat_str)
   {
-    printf(ANSI_ITALIC"exit\n"ANSI_RESET);
+    printf("exit\n");
     *exitnum = 0;
     kill(0, SIGTERM);
   }
@@ -32,7 +32,7 @@ int exit_cmd(int argc, char** argv, int* exitnum)
   }
 
   *exitnum =  atoi(exitstat_str);
-  printf(ANSI_ITALIC"exit\n"ANSI_RESET);
+  printf("exit\n");
   kill(0, SIGTERM);
 }
 
