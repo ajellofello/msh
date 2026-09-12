@@ -1,3 +1,4 @@
+#define _POSIX_SOURCE
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -8,12 +9,9 @@
 #include "builtin.h"
 #include "shell.h"
 
-#define EXIT_FAILURE 1
-#define EXIT_SUCCSS  0
-#define PROMPTSIZ    1024
-#define PID_CHILD    0
-#define PID_ERR      -1
-#define PROG         "msh"
+#define PROMPTSIZ 1024
+#define PID_CHILD 0
+#define PID_ERR   -1
 
 static char** argv;
 static char* prompt;
@@ -23,6 +21,8 @@ void terminate(int signum)
 {
   free(prompt);
   free(argv);
+
+  printf(ANSI_ITALIC"exit\n"ANSI_RESET);
 
   exit(exitnum);
 }
@@ -40,14 +40,12 @@ int main()
 
     int argc = 0;
     argv = parse(prompt, &argc);
-
     char* cmd = argv[0];
-
     pid_t pid = fork();
 
     if (pid == PID_ERR)
     {
-      fprintf(stderr, PROG": could not fork current process. Terminating Shell\n");
+      fprintf(stderr, "could not fork current process. Terminating Shell\n");
       exit(EXIT_FAILURE);
     }
 
@@ -59,6 +57,11 @@ int main()
     {
       if (strcmp(cmd, "exit") == 0) { exit_cmd(argc, argv, &exitnum); }
       else if (strcmp(cmd, "cd") == 0) { cd_cmd(argc, argv); }
+      else
+      {
+        fprintf(stderr, "unknown command '%s'\n", cmd);
+        exit(EXIT_FAILURE);
+      }
     }
   }
 

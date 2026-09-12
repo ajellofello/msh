@@ -6,19 +6,21 @@
 #include <ctype.h>
 
 #include "builtin.h"
+#include "shell.h"
 
 #define EXIT_CMD "exit"
 #define CD_CMD   "cd"
 
-int exit_cmd(int argc, char** argv, int* exitnum)
+void exit_cmd(int argc, char** argv, int* exitnum)
 {
+  const pid_t ppid = getppid();
   char* exitstat_str = (argv[1]) ? argv[1] : NULL;
 
   if (!exitstat_str)
   {
-    printf("exit\n");
     *exitnum = 0;
-    kill(0, SIGTERM);
+    kill(ppid, SIGTERM);
+    exit(EXIT_SUCCESS);
   }
 
   char c;
@@ -27,32 +29,32 @@ int exit_cmd(int argc, char** argv, int* exitnum)
     if (!isdigit(c) && c != '-')
     {
       fprintf(stderr, EXIT_CMD": expected a numeric exit status\n");
-      return 1;
+      exit(EXIT_FAILURE);
     }
   }
 
   *exitnum =  atoi(exitstat_str);
-  printf("exit\n");
-  kill(0, SIGTERM);
+  kill(ppid, SIGTERM);
+  exit(EXIT_SUCCESS);
 }
 
-int cd_cmd(int argc, char** argv)
+void cd_cmd(int argc, char** argv)
 {
-  char* dest = (argv[1]) ? dest : getenv("HOME");
+  const char* dest = (argv[1]) ? argv[1] : getenv("HOME");
 
   if (!dest)
   {
     fprintf(stderr, CD_CMD": current user does not have a home directory\n");
-    return 1;
+    exit(EXIT_FAILURE);
   }
 
   int success = (chdir(dest) != -1);
   if (!success)
   {
     perror("cd");
-    return 1;
+    exit(EXIT_FAILURE);
   }
 
-  return 0;
+  exit(EXIT_SUCCESS);
 }
 
