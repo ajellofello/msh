@@ -12,6 +12,7 @@
 #include "builtin.h"
 #include "alloc.h"
 
+#define ECHO_CMD "echo"
 #define EXIT_CMD "exit"
 #define PWD_CMD  "pwd"
 #define CD_CMD   "cd"
@@ -74,5 +75,12 @@ void pwd_cmd(int argc, char** argv)
   }
 
   printf("%s\n", cwd);
+}
+
+void echo_cmd(int argc, char** argv)
+{
+  for (int i = 1; i < argc; i++)
+    printf("%s ", argv[i]);
+  printf("\n");
 }
 

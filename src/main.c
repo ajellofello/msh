@@ -23,6 +23,7 @@ int main()
     if (strcmp(cmd, "exit") == 0) { exit_cmd(argc, argv); }
     else if (strcmp(cmd, "cd") == 0) { cd_cmd(argc, argv); }
     else if (strcmp(cmd, "pwd") == 0) { pwd_cmd(argc, argv); }
+    else if (strcmp(cmd, "echo") == 0) { echo_cmd(argc, argv); }
     else
     {
       fprintf(stderr, "unknown command '%s'\n", cmd);
