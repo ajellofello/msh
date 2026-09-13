@@ -95,13 +95,18 @@ void exec(char* path, char** argv)
 
   if (pid == PID_ERROR)
   {
-    fprintf(stderr, PROG": could not fork current process. Shell exiting\n");
+    fprintf(stderr, PROG": could not fork current process\n");
     perror(PROG": fork");
     exit(EXIT_FAILURE);
   }
 
   if (pid != PID_CHILD)
-    wait(NULL);
+  {
+    int wstatus;
+    wait(&wstatus);
+
+    if (WIFEXITED(wstatus)) { laststatus = WEXITSTATUS(wstatus); }
+  }
   else
   {
     int success = (execvp(path, argv) != -1);
