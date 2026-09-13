@@ -17,6 +17,8 @@
 #define PWD_CMD  "pwd"
 #define CD_CMD   "cd"
 
+static char* home;
+
 int exit_cmd(int argc, char** argv)
 {
   char* exitstat = (argv[1]) ? argv[1] : NULL;
@@ -43,13 +45,14 @@ int exit_cmd(int argc, char** argv)
 
 int cd_cmd(int argc, char** argv)
 {
+  if (!home) { home = getenv("HOME"); } /* We don't check if $HOME env doesn't exist as $HOME is never unset. How poetic */
+
   int shouldfree = (argv[1] != NULL); /* if a path was given we need to free the resulted realpath() */
-  char* dest = (argv[1]) ? realpath(argv[1], NULL) : getenv("HOME");
+  char* dest = (argv[1]) ? realpath(argv[1], NULL) : home;
 
   if (!dest)
   {
-    if (errno != 0) { perror(CD_CMD); }
-    else { fprintf(stderr, CD_CMD": HOME is unset\n"); }
+    perror(CD_CMD);
     return EXIT_FAILURE;
   }
 

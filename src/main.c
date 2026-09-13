@@ -7,7 +7,7 @@
 
 #define PROMPTSIZ 1024
 
-extern int laststatus; /* represents the exit status of the last command. Deined in src/shell.c */
+extern int laststatus; /* represents the exit status of the last command. Defined in src/shell.c */
 
 int main()
 {

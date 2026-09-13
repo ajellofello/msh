@@ -24,12 +24,14 @@ void rm_trailingnl(char* str)
   str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
-void lstrip(char** str)
+void lstrip(char* dst, char* src)
 {
-  if (str == NULL) { return; }
+  if (src == NULL) { return; }
 
-  while (**str == ' ')
-    ++(*str);
+  while (*src == ' ')
+    ++src;
+
+  strcpy(dst, src);
 }
 
 void rstrip(char* str)
@@ -46,10 +48,15 @@ void rstrip(char* str)
   }
 }
 
-void strip(char** str)
+void strip(char* str)
 {
-  lstrip(str);
-  rstrip(*str);
+  char* strcp = xmalloc(strlen(str) + 1);
+  strcpy(strcp, str);
+
+  lstrip(str, strcp);
+  rstrip(str);
+
+  free(strcp);
 }
 
 char* getprompt(const size_t size)
@@ -64,7 +71,7 @@ char* getprompt(const size_t size)
   fgets(prompt, size, stdin);
 
   rm_trailingnl(prompt);
-  strip(&prompt);
+  strip(prompt);
 
   if (strcmp(prompt, "") == 0) { return NULL; }
 
