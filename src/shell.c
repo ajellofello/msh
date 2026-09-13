@@ -11,6 +11,9 @@
 #define PID_CHILD 0
 #define PID_ERROR -1
 
+/* The exit status of the last command */
+int laststatus = 0;
+
 void rm_trailingnl(char* str)
 {
   if (str == NULL) { return; }
@@ -51,7 +54,11 @@ char* getprompt(const size_t size)
 {
   char* prompt = xmalloc(size);
 
-  printf(ANSI_CYAN"$ "ANSI_RESET);
+  if (laststatus != 0)
+    printf(ANSI_RED"$ "ANSI_RESET);
+  else
+    printf(ANSI_CYAN"$ "ANSI_RESET);
+
   fgets(prompt, size, stdin);
 
   rm_trailingnl(prompt);

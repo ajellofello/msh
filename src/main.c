@@ -7,6 +7,8 @@
 
 #define PROMPTSIZ 1024
 
+extern int laststatus; /* represents the exit status of the last command. Deined in src/shell.c */
+
 int main()
 {
   int running = 1;
@@ -19,12 +21,18 @@ int main()
     int argc = 0;
     char** argv = parse(prompt, &argc);
     char* cmd = argv[0];
-  
-    if (strcmp(cmd, "exit") == 0) { exit_cmd(argc, argv); }
-    else if (strcmp(cmd, "cd") == 0) { cd_cmd(argc, argv); }
-    else if (strcmp(cmd, "pwd") == 0) { pwd_cmd(argc, argv); }
-    else if (strcmp(cmd, "echo") == 0) { echo_cmd(argc, argv); }
-    else if (strcmp(cmd, "help") == 0) { HELP(); }
+
+    if (strcmp(cmd, "help") == 0)
+    {
+      HELP();
+      laststatus = EXIT_SUCCESS; /* as HELP() can't fail */
+      continue;
+    }
+
+    if (strcmp(cmd, "exit") == 0) { laststatus = exit_cmd(argc, argv); }
+    else if (strcmp(cmd, "cd") == 0) { laststatus = cd_cmd(argc, argv); }
+    else if (strcmp(cmd, "pwd") == 0) { laststatus = pwd_cmd(argc, argv); }
+    else if (strcmp(cmd, "echo") == 0) { laststatus = echo_cmd(argc, argv); }
     else
       exec(cmd, argv);
 
