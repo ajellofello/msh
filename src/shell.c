@@ -24,40 +24,6 @@ void rm_trailingnl(char* str)
   str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
-void lstrip(char* str)
-{
-  if (str == NULL) { return; }
-
-  size_t offset = 0;
-  
-  while (offset < strlen(str))
-  {
-    if (str[offset] != ' ') { break; }
-
-    offset++;
-  }
-
-  if (offset) { strcpy(str, (str + offset)); }
-}
-
-void rstrip(char* str)
-{
-  if (str == NULL) { return; }
-
-  for (int i = strlen(str); i > 0; i--)
-  {
-    if (str[i] != ' ') { break; }
-
-    str[i] = '\0';
-  }
-}
-
-void strip(char* str)
-{
-  lstrip(str);
-  rstrip(str);
-}
-
 char* getprompt(const size_t size)
 {
   char* prompt = xmalloc(size);
@@ -71,7 +37,6 @@ char* getprompt(const size_t size)
   fgets(prompt, size, stdin);
 
   rm_trailingnl(prompt);
-  strip(prompt);
 
   if (strcmp(prompt, "") == 0)
   {
