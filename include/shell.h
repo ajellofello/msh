@@ -10,7 +10,7 @@
 
 char* getprompt(const size_t size);
 char** parse(char* prompt, int* argc);
-void exec(char* path, char** argv);
+int exec(char* cmd, int argc, char** argv);
 
 #endif
 

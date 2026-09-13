@@ -22,19 +22,7 @@ int main()
     char** argv = parse(prompt, &argc);
     char* cmd = argv[0];
 
-    if (strcmp(cmd, "help") == 0)
-    {
-      HELP();
-      laststatus = EXIT_SUCCESS; /* as HELP() can't fail */
-      continue;
-    }
-
-    if (strcmp(cmd, "exit") == 0) { laststatus = exit_cmd(argc, argv); }
-    else if (strcmp(cmd, "cd") == 0) { laststatus = cd_cmd(argc, argv); }
-    else if (strcmp(cmd, "pwd") == 0) { laststatus = pwd_cmd(argc, argv); }
-    else if (strcmp(cmd, "echo") == 0) { laststatus = echo_cmd(argc, argv); }
-    else
-      exec(cmd, argv);
+    laststatus = exec(cmd, argc, argv);
 
     free(argv);
     free(prompt);

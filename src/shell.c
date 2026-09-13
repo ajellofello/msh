@@ -4,12 +4,14 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#include "builtin.h"
 #include "shell.h"
 #include "alloc.h"
 
 #define BASE_ARGV 8
 #define PID_CHILD 0
 #define PID_ERROR -1
+#define UNKNOWN   -1
 
 /* The exit status of the last command */
 int laststatus = 0;
@@ -89,7 +91,26 @@ char** parse(char* prompt, int* argc)
   return argv;
 }
 
-void exec(char* path, char** argv)
+int execbuiltin(char* cmd, int argc, char** argv)
+{
+  if (strcmp(cmd, "help") == 0)
+  {
+    HELP();
+    return EXIT_SUCCESS;
+  }
+
+  if (strcmp(cmd, "exit") == 0) { return exit_cmd(argc, argv); }
+  if (strcmp(cmd, "cd") == 0) { return cd_cmd(argc, argv); }
+  if (strcmp(cmd, "pwd") == 0) { return pwd_cmd(argc, argv); }
+  if (strcmp(cmd, "echo") == 0) { return echo_cmd(argc, argv); }
+
+  return UNKNOWN; /* its safe to return UNKNOWN (-1) here even though technically any of
+                   * the builtins but HELP() could return that as an exit status, but since
+                   * all builtins return only EXIT_SUCCESS (0) and EXIT_FAILURE (1) its fine
+                   */
+}
+
+int execextern(char* path, int argc, char** argv)
 {
   const pid_t pid = fork();
 
@@ -105,7 +126,7 @@ void exec(char* path, char** argv)
     int wstatus;
     wait(&wstatus);
 
-    if (WIFEXITED(wstatus)) { laststatus = WEXITSTATUS(wstatus); }
+    if (WIFEXITED(wstatus)) { return WEXITSTATUS(wstatus); }
   }
   else
   {
@@ -117,6 +138,13 @@ void exec(char* path, char** argv)
       exit(EXIT_FAILURE);
     }
   }
+}
+
+int exec(char* cmd, int argc, char** argv)
+{
+  int laststatus = execbuiltin(cmd, argc, argv);
+
+  return (laststatus != UNKNOWN) ? laststatus : execextern(cmd, argc, argv);
 }
 
 
