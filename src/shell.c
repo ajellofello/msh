@@ -29,7 +29,7 @@ void lstrip(char* str)
   if (str == NULL) { return; }
 
   size_t offset = 0;
-
+  
   while (offset < strlen(str))
   {
     if (str[offset] != ' ') { break; }
@@ -73,7 +73,11 @@ char* getprompt(const size_t size)
   rm_trailingnl(prompt);
   strip(prompt);
 
-  if (strcmp(prompt, "") == 0) { return NULL; }
+  if (strcmp(prompt, "") == 0)
+  {
+    free(prompt);
+    return NULL;
+  }
 
   return prompt;
 }
