@@ -46,11 +46,9 @@ void rstrip(char* str)
 
   for (int i = strlen(str); i > 0; i--)
   {
-    if (str[i] != ' ')
-    {
-      str[i + 1] = '\0';
-      break;
-    }
+    if (str[i] != ' ') { break; }
+
+    str[i] = '\0';
   }
 }
 
@@ -68,6 +66,7 @@ char* getprompt(const size_t size)
     printf(ANSI_RED"$ "ANSI_RESET);
   else
     printf(ANSI_CYAN"$ "ANSI_RESET);
+  fflush(stdout);
 
   fgets(prompt, size, stdin);
 
