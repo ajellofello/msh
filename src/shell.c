@@ -14,7 +14,7 @@
 #define UNKNOWN   -1
 
 /* The exit status of the last command */
-int laststatus = 0;
+int laststatus = EXIT_SUCCESS;
 
 void rm_trailingnl(char* str)
 {
@@ -24,21 +24,27 @@ void rm_trailingnl(char* str)
   str[end] = (str[end] == '\n') ? '\0' : str[end];
 }
 
-void lstrip(char* dst, char* src)
+void lstrip(char* str)
 {
-  if (src == NULL) { return; }
+  if (str == NULL) { return; }
 
-  while (*src == ' ')
-    ++src;
+  size_t offset = 0;
 
-  strcpy(dst, src);
+  while (offset < strlen(str))
+  {
+    if (str[offset] != ' ') { break; }
+
+    offset++;
+  }
+
+  if (offset) { strcpy(str, (str + offset)); }
 }
 
 void rstrip(char* str)
 {
   if (str == NULL) { return; }
 
-  for (int i = (strlen(str) - 1); i > 0; i--)
+  for (int i = strlen(str); i > 0; i--)
   {
     if (str[i] != ' ')
     {
@@ -50,20 +56,15 @@ void rstrip(char* str)
 
 void strip(char* str)
 {
-  char* strcp = xmalloc(strlen(str) + 1);
-  strcpy(strcp, str);
-
-  lstrip(str, strcp);
+  lstrip(str);
   rstrip(str);
-
-  free(strcp);
 }
 
 char* getprompt(const size_t size)
 {
   char* prompt = xmalloc(size);
 
-  if (laststatus != 0)
+  if (laststatus != EXIT_SUCCESS)
     printf(ANSI_RED"$ "ANSI_RESET);
   else
     printf(ANSI_CYAN"$ "ANSI_RESET);
