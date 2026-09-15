@@ -7,7 +7,7 @@
 Download and extract the tarball
 
 ```
-curl https://github.com/ajellofello/msh/archive/refs/tags/v0.0.1-alpha.tar.gz -o msh-0.0.1-alpha.tar.gz
+curl -Lo msh-0.0.1-alpha.tar.gz https://github.com/ajellofello/msh/archive/refs/tags/v0.0.1-alpha.tar.gz
 tar -zxf msh-0.0.1-alpha.tar.gz
 ```
 
