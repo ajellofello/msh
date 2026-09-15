@@ -4,11 +4,21 @@
 
 # INSTALLATION
 
-Clone the repo or install the tar ball, create `build/` and `bin/` & run `make`
-in the root of the project
+Install the tarball
+
+```
+curl https://github.com/ajellofello/msh/archive/refs/tags/v0.0.1-alpha.tar.gz -o msh.tar.gz
+```
+
+Or clone the repo
 
 ```
 git clone https://github.com/ajellofello/msh.git && cd msh
+```
+
+Create `bin/` and `build/` then run `make`
+
+```
 mkdir build bin
 make
 ```
