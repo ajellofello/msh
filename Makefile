@@ -1,7 +1,7 @@
 OBJECTS := $(addprefix build/, main.o shell.o builtin.o alloc.o)
 CFLAGS  := -Iinclude -std=c99
 VPATH   := src include
-bin     := bin/msh.out
+bin     := bin/msh
 
 $(bin): $(OBJECTS)
 	$(CC) -o $@ $^
