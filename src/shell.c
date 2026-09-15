@@ -52,6 +52,8 @@ char** parse(char* prompt, int* argc)
   size_t cap = BASE_ARGV;
   char** argv = xcalloc(cap, sizeof(char*));
   char* tok = strtok(prompt, " ");
+  
+  if (tok == NULL) { return NULL; }
 
   do
   {

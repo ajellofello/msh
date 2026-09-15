@@ -20,6 +20,7 @@ int main()
 
     int argc = 0;
     char** argv = parse(prompt, &argc);
+    if (!argv) { continue; }
     char* cmd = argv[0];
 
     laststatus = exec(cmd, argc, argv);
