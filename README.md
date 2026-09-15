@@ -17,10 +17,9 @@ Or clone the repo
 git clone https://github.com/ajellofello/msh.git && cd msh
 ```
 
-Create `bin/` and `build/` then run `make`
+then run `make`
 
 ```
-mkdir build bin
 make
 ```
 

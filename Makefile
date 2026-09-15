@@ -1,27 +1,32 @@
-OBJECTS := $(addprefix build/, main.o shell.o builtin.o alloc.o)
+OBJS    := $(addprefix build/, main.o alloc.o shell.o builtin.o)
+TARGET  := bin/msh
 CFLAGS  := -Iinclude -std=c99
 VPATH   := src include
-bin     := bin/msh
+RM      := rm -rf
 
-$(bin): $(OBJECTS)
+$(TARGET): $(OBJS)
+	mkdir -p bin
 	$(CC) -o $@ $^
 
-build/main.o: main.c shell.h
+build/main.o: main.c shell.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/shell.o: shell.c shell.h
+build/shell.o: shell.c shell.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/builtin.o: builtin.c builtin.h
+build/builtin.o: builtin.c builtin.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/alloc.o: alloc.c alloc.h
+build/alloc.o: alloc.c alloc.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
+
+build:
+	mkdir -p build
 
 .PHONY: clean debug
 clean:
-	-$(RM) $(OBJECTS) $(bin)
+	-$(RM) $(OBJS) $(TARGET) bin build
 
-debug: CFLAGS += -g -Werror
-debug: $(bin)
+debug: CFLAGS += -g -Werror -Wextra
+debug: $(TARGET)
 

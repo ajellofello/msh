@@ -49,7 +49,7 @@ char* getprompt(const size_t size)
 
 char** parse(char* prompt, int* argc)
 {
-  size_t cap = BASE_ARGV;
+  int cap = BASE_ARGV;
   char** argv = xcalloc(cap, sizeof(char*));
   char* tok = strtok(prompt, " ");
   
