@@ -6,7 +6,7 @@
 \n\
   help         prints this help screen\n\
   echo <ARGS>  prints <ARGS> with spaces as separators\n\
-  exit         exits the shell\n\
+  exit <STAT>  exits the shell with exit code <STAT>\n\
   pwd          prints the current working directory\n\
   cd <DIR>     changes the current working directory to <DIR>\n\
 \n\
